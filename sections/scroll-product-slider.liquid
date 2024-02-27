@@ -1,0 +1,1172 @@
+<section class="slider-outline-top">
+  <div class="slider-outline-top-wrapper">
+    {% for block in section.blocks %}
+      <div
+        id="slide{{ forloop.index }}"
+        class="slider-outline"
+        style="
+          background-image: url('{{ block.settings.backgroundimg | image_url }}');
+          background-color: white;
+          background-size: cover;
+          background-position: center;
+          position: relative;
+          background-repeat: no-repeat;
+          width: 100%;
+          height: 100vh;
+        "
+      >
+        {% assign brain = block.settings.handlet %}
+        {% assign product = all_products[brain] %}
+        {% form 'product', product %}
+          <div class="block1"><p></p></div>
+          <div class="block2"><p></p></div>
+
+          {% comment %}---------------------- middle circles ----------------- {% endcomment %}
+          {% comment %}---------------------- middle circles----------------- {% endcomment %}
+          {% comment %}---------------------- middle circles----------------- {% endcomment %}
+          <div class="goku">
+            <div class="middle-circle-wrapper">
+              <div class="middle-circle-1" onclick="toggleMenu('popup{{ forloop.index }}')">
+                <img
+                  width="40px"
+                  height="40px"
+                  loading="lazy"
+                  class="single-pop-img-1"
+                  style="border-radius: 150px;"
+                  alt="img"
+                  src="{{ block.settings.circle1 | image_url }}"
+                >
+                <p>{{ block.settings.textcircle1 }}</p>
+              </div>
+              <div class="middle-circle-2" onclick="toggleMenu('popup2{{ forloop.index }}')">
+                <img
+                  width="40px"
+                  height="40px"
+                  loading="lazy"
+                  class="single-pop-img-1"
+                  style="border-radius: 150px;"
+                  alt="img"
+                  src="{{ block.settings.circle1 | image_url }}"
+                >
+                <p>{{ block.settings.textcircle2 }}</p>
+              </div>
+              <div class="middle-circle-1">
+                <img
+                  width="40px"
+                  height="40px"
+                  loading="lazy"
+                  class="single-pop-img-1"
+                  style="border-radius: 150px;"
+                  alt="img"
+                  src="{{ block.settings.circle1 | image_url }}"
+                >
+                <p>{{ block.settings.textcircle1 }}</p>
+              </div>
+            </div>
+
+            {% comment %}---------------------- button ----------------- {% endcomment %}
+            {% comment %}---------------------- button ----------------- {% endcomment %}
+            {% comment %}---------------------- button ----------------- {% endcomment %}
+
+            <div class="slider-outline-button-sec">
+              <input id="variantId" name="id" type="hidden" value="{{ product.variants[0].id }}">
+              <button
+                style="display: none;"
+                id="productLink2"
+                type="submit"
+                class="btn product-form__cart-submit btn--secondary-accent"
+                data-buy-now
+                data-product-id="{{ product.variants.first.id }}"
+              >
+                <span> Buy now </span>
+              </button>
+              <a id="productLink" class="btnn">
+                Slide to Purchase
+                <span class="bally"></span
+              ></a>
+            </div>
+          </div>
+          {% comment %}---------------------- POPUP CART ----------------- {% endcomment %}
+          {% comment %}---------------------- POPUP CART  ----------------- {% endcomment %}
+          {% comment %}---------------------- POPUP CART  ----------------- {% endcomment %}
+          <div class="popupclass" id="popup{{ forloop.index }}">
+            {% form 'product', product %}
+              <div class="popupclass-inner">
+                <div onclick="toggleMenu('popup{{ forloop.index }}')">X</div>
+
+                <div class="popupclass-wrapper">
+                  <div class="popupclass-wrapper-inner">
+                    <img
+                      width="90px"
+                      height="90px"
+                      loading="lazy"
+                      style="border-radius: 10px;"
+                      src="{{ product.featured_image | image_url}}"
+                    >
+                    <div class="popupclass-wrapper-inner-texts">
+                      <h4>{{ product.title }}</h4>
+                      <h4>{{ product.price | money }}</h4>
+                    </div>
+                  </div>
+                  <button class="add-to-cart-plus">+</button>
+                </div>
+                <div>
+                  <div class="add-to-cart-below-div">
+                    {{ form | payment_button }}
+                  </div>
+                </div>
+              </div>
+            {% endform %}
+            {% comment %}
+              <div>
+                <div onclick="toggleMenu('popup{{ forloop.index }}')">X</div>
+                {% render 'cart' %}
+              </div>
+            {% endcomment %}
+          </div>
+          {% comment %}---------------------- POPUP 2 ----------------- {% endcomment %}
+          {% comment %}---------------------- POPUP 2 ----------------- {% endcomment %}
+          {% comment %}---------------------- POPUP 2 ----------------- {% endcomment %}
+          <div class="popupclass2" id="popup2{{ forloop.index }}">
+            <h1>FAQ's</h1>
+            <div onclick="toggleMenu('popup2{{ forloop.index }}')">close</div>
+            <div class="accordion">
+              <div class="accordion-item">
+                <div class="accordion-title">Question 1?</div>
+                <div class="accordion-content">
+                  <p>Answer to question 1.</p>
+                </div>
+              </div>
+
+              <div class="accordion2">
+                <div class="accordion-item2">
+                  <div class="accordion-title2">Question 2?</div>
+                  <div class="accordion-content2">
+                    <p>Answer to question 1.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion3">
+                <div class="accordion-item3">
+                  <div class="accordion-title3">Question 3?</div>
+                  <div class="accordion-content3">
+                    <p>Answer to question 1.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              {% comment %}
+                <div id="cartItems"></div>
+                {{ cart.item_count }}
+                <button onclick="addProductToCart()">Add Product to Cart</button>
+              {% endcomment %}
+            </div>
+          </div>
+
+          {% comment %}---------------------- button ----------------- {% endcomment %}
+          {% comment %}---------------------- button ----------------- {% endcomment %}
+          {% comment %}---------------------- button ----------------- {% endcomment %}
+        {% endform %}
+      </div>
+    {% endfor %}
+  </div>
+  <button class="arrow-left">
+    <i class="fas fa-arrow-left">l</i>
+  </button>
+  <button class="arrow-right">
+    <i class="fas fa-arrow-right">r</i>
+  </button>
+</section>
+
+<script>
+
+  async function addProductToCart() {
+    const variantId = document.getElementById('variantId').value;
+    console.log(variantId, 'variantId')
+    const quantity = 1; // You can change the quantity as needed
+
+    try {
+        const response = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: variantId,
+                quantity: quantity
+            })
+        });
+
+        if (response.ok) {
+            alert('Product added to cart successfully!');
+        } else {
+            const errorMessage = await response.text();
+            throw new Error(`Failed to add product to cart: ${errorMessage}`);
+        }
+    } catch (error) {
+        console.error(error);
+        alert('Failed to add product to cart. Please try again.');
+    }
+}
+
+  
+
+  async function getCart() {
+    const result = await fetch("/cart.json");
+    console.log(result)
+
+    if (result.status === 200) {
+        return result.json();
+    }
+    throw new Error(`Failed to get request, Shopify returned ${result.status} ${result.statusText}`);
+}
+
+const cart =  getCart(); 
+
+console.log(cart)
+
+
+  async function displayCartItems() {
+    try {
+        const cart = await getCart();
+        const cartItemsDiv = document.getElementById('cartItems');
+
+        // Clear previous content
+        cartItemsDiv.innerHTML = '';
+
+        // Iterate over cart items and create HTML elements
+        cart.items.forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.textContent = `${item.name} - Quantity: ${item.quantity}`;
+            cartItemsDiv.appendChild(itemDiv);
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+     //------------------------------------------------------ACCORDION
+  //---------------------------------------------------------
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    const accordionItems = document.querySelectorAll('.accordion-item');
+
+
+    accordionItems.forEach(item => {
+      item.addEventListener('click', function() {
+        // Toggle the active class for the clicked item
+        this.classList.toggle('active');
+      });
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const accordionItems2 = document.querySelectorAll('.accordion-item2');
+  
+    accordionItems2.forEach(item => {
+      item.addEventListener('click', function() {
+        // Toggle the active class for the clicked item
+        this.classList.toggle('active');
+      });
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const accordionItems3 = document.querySelectorAll('.accordion-item3');
+  
+    accordionItems3.forEach(item => {
+      item.addEventListener('click', function() {
+        // Toggle the active class for the clicked item
+        this.classList.toggle('active');
+      });
+    });
+  });
+  
+  
+  
+     //------------------------------------------------------POPUPS
+  //---------------------------------------------------------
+ document.addEventListener('click', function(event) {
+    const clickedElement = event.target;
+    if (clickedElement.classList.contains('middle-circle-1')) {
+      // Find the closest popup element within the current slide
+      const currentSlide = clickedElement.closest('.slider-outline');
+      const popup = currentSlide.querySelector('.popupclass');
+      // Toggle the active class for the found popup element
+      if (popup) {
+        popup.classList.toggle('active');
+      }
+    }
+  }); 
+
+
+
+  function toggleMenu(popupId) {
+    const popup = document.getElementById(popupId);
+    if (popup) {
+      popup.classList.toggle('active');
+    }
+
+  } 
+
+
+  //---------------------------------------------POPUP 2
+  //-------------------------------------------------
+
+   document.addEventListener('click', function(event) {
+    console.log('Clicked');
+
+    const clickedElement = event.target;
+    if (clickedElement.classList.contains('middle-circle-2')) {
+      // Find the closest popup element within the current slide
+      const currentSlide = clickedElement.closest('.slider-outline');
+      const popup = currentSlide.querySelector('.popupclass2');
+      // Toggle the active class for the found popup element
+      if (popup) {
+        popup.classList.toggle('active');
+      }
+
+      {% comment %} event.stopPropagation(); {% endcomment %}
+
+    }
+  }); 
+
+
+
+   //-------------------------------------------CAROUSEL
+  //--------------------------------------------
+  //--------------------------------------------
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const contentSlider = document.querySelector(".slider-outline-top");
+    const container = document.querySelector(".slider-outline-top-wrapper");
+    const slides = document.querySelectorAll(".slider-outline");
+    const arrLeft = document.querySelector(".arrow-left");
+    const arrRight = document.querySelector(".arrow-right");
+  
+    const numSlides = slides.length;
+    container.style.setProperty("--num-slides", numSlides);
+  
+    let offset = 0;
+    let dragStartX = 0;
+    let isDragging = false;
+    const threshold = 50;
+  
+    arrRight.style.display = "none";
+    arrLeft.style.display = "none";
+  
+    arrRight.addEventListener("click", slideNext);
+    arrLeft.addEventListener("click", slidePrev);
+    contentSlider.addEventListener("mousedown", startDragging);
+    contentSlider.addEventListener("touchstart", startDragging);
+    document.addEventListener("mouseup", endDragging);
+    document.addEventListener("touchend", endDragging);
+    document.addEventListener("mousemove", dragging);
+    document.addEventListener("touchmove", dragging);
+  
+    function startDragging(e) {
+      isDragging = true;
+      dragStartX = e.type.startsWith("touch") ? e.touches[0].clientX : e.clientX;
+    }
+  
+    function dragging(e) {
+        if (!isDragging) return;
+        const currentX = e.type.startsWith("touch") ? e.touches[0].clientX : e.clientX;
+        const diffX = currentX - dragStartX;
+        const sensitivity = 50; // Adjust sensitivity as needed
+      
+        if (diffX > sensitivity) {
+          slidePrev();
+          isDragging = false;
+        } else if (diffX < -sensitivity) {
+          slideNext();
+          isDragging = false;
+        }
+      }
+      
+  
+    function endDragging(e) {
+      if (!isDragging) return;
+      isDragging = false;
+      const currentX = e.type.startsWith("touch") ? e.changedTouches[0].clientX : e.clientX;
+      const diffX = currentX - dragStartX;
+  
+      // Calculate the distance to the nearest slide boundary
+      const slideWidth = slides[0].offsetWidth;
+      const slideIndex = Math.round(offset / slideWidth);
+      const targetOffset = slideIndex * slideWidth;
+  
+      // Snap to the nearest slide boundary with transition
+      container.style.transition = "transform 0.5s ease";
+      container.style.transform = `translateX(${targetOffset}px)`;
+      offset = targetOffset;
+  
+      // Show/hide arrow buttons based on the current slide
+      if (offset === 0) {
+        arrLeft.style.display = "none";
+      } else {
+        arrLeft.style.display = "block";
+      }
+      if (Math.abs(offset) >= (numSlides - 1) * slideWidth) {
+        arrRight.style.display = "none";
+      } else {
+        arrRight.style.display = "block";
+      }
+    }
+  
+    function slideNext() {
+      const slideWidth = slides[0].offsetWidth;
+      if (Math.abs(offset) < (numSlides - 1) * slideWidth) {
+        offset -= slideWidth;
+        container.style.transition = "transform 0.5s ease";
+        container.style.transform = `translateX(${offset}px)`;
+        arrLeft.style.display = "block";
+      }
+    }
+  
+    function slidePrev() {
+      const slideWidth = slides[0].offsetWidth;
+      if (offset < 0) {
+        offset += slideWidth;
+        container.style.transition = "transform 0.5s ease";
+        container.style.transform = `translateX(${offset}px)`;
+        arrRight.style.display = "block";
+      }
+    }
+  });
+  
+  
+
+   //-------------------------------------------- GO CHECKOUT ON SLIDE
+  //--------------------------------------------
+  //--------------------------------------------
+
+  
+
+ document.querySelector('[data-buy-now]').addEventListener('click', () => {
+    let addToCartForm = document.querySelector('form[action="/cart/add"]');
+    let formData = new FormData(addToCartForm);
+
+        // Get the value from the hidden input
+        let productId = document.querySelector('input[name="id"]'); //.value
+    
+        // Append the productId to the form data
+        formData.append('id', productId);
+
+    fetch(window.Shopify.routes.root + 'cart/add.js', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      window.location.href = '/checkout';
+      return response.json();
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  });    
+
+ 
+  //--------------------------------------------
+  //--------------------------------------------
+  //--------------------------------------------
+
+   //----------------------SLIDER----------------
+  //--------------------------------------------
+  //--------------------------------------------
+
+  const btnnList = document.querySelectorAll('.btnn');
+
+  btnnList.forEach((btnn) => {
+    const bally = btnn.querySelector('.bally');
+    const productUrl = '{{ product.url }}';
+    let originalLeft = 0;
+    let isDragging = false;
+
+    bally.addEventListener('mousedown', startDragging);
+    bally.addEventListener('touchstart', startDragging);
+
+    function startDragging(e) {
+      e.preventDefault();
+      isDragging = true;
+      const startX = e.clientX || e.touches[0].clientX;
+      const initialLeft = parseFloat(window.getComputedStyle(bally).left);
+      {% comment %} navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+      console.log(navigator.vibrate, 'vi');
+      navigator.vibrate([100]);
+      navigator.vibrate([500]);
+      navigator.vibrate(500);
+      window.navigator.vibrate(100); {% endcomment %}
+
+      // Add the sparkling span
+      const sparkle = document.createElement('span');
+      sparkle.classList.add('sparkle');
+      bally.appendChild(sparkle);
+      btnn.style.color = '#fafafa';
+      btnn.style.backgroundColor = 'dimgray';
+
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('touchmove', drag);
+
+      document.addEventListener('mouseup', stopDragging);
+      document.addEventListener('touchend', stopDragging);
+
+       //--------------------------------------------------------------------------------------
+      //--------------------------------------------------------------------------------------
+     //--------------------------------------------------------------------------------------
+     //--------------------------------------------------------------------------------------
+
+      function drag(e) {
+        e.preventDefault();
+
+        if (!isDragging) return;
+        const newX = e.clientX || e.touches[0].clientX;
+        const diffX = newX - startX;
+        const newLeft = initialLeft + diffX;
+        const maxLeft = btnn.offsetWidth - bally.offsetWidth * 1.1;
+        bally.style.left = `${Math.min(maxLeft, Math.max(0, newLeft))}px`;
+
+        // Update the text position based on the span's position
+        if (newLeft >= maxLeft) {
+          document.getElementById('productLink2').click(); // Simulate a click on the hidden product link
+
+          stopDragging();
+        }
+      }
+      //--------------------------------------------------------------------------------------
+      //--------------------------------------------------------------------------------------
+     //--------------------------------------------------------------------------------------
+     //--------------------------------------------------------------------------------------
+      function stopDragging() {
+        isDragging = false;
+       // bally.style.left = `${originalLeft}px`; // Return to the original position
+        btnn.style.color = 'white';
+        btnn.style.backgroundColor = 'black';
+
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('touchmove', drag);
+        document.removeEventListener('mouseup', stopDragging);
+        document.removeEventListener('touchend', stopDragging);
+      }
+    }
+    bally.addEventListener('mousedown', startDragging);
+    bally.addEventListener('touchstart', startDragging);
+  });
+</script>
+
+<style>
+      /* ---------------------------------------- CAROUSEL */
+      /* ---------------------------------------- CAROUSEL */
+      /* ---------------------------------------- CAROUSEL */
+      /* ---------------------------------------- CAROUSEL */
+      /* ---------------------------------------- CAROUSEL */
+      /* ---------------------------------------- CAROUSEL */
+
+
+    .slider-outline-top {
+        overflow: hidden;
+        position: relative;
+        height: 100vh;
+
+      }
+
+      .slider-outline-top-wrapper {
+        display: flex;
+        transition: transform 0.5s ease;
+        {% comment %} overflow-y: hidden; {% endcomment %}
+
+      }
+
+      .slider-outline {
+        flex: 0 0 auto;
+        width: 100%;
+        height: 100vh;
+        background-size: cover;
+        background-position: center;
+        {% comment %} flex-direction: column;
+        align-content: center;
+        justify-content: end; {% endcomment %}
+        position: relative; /* Ensure relative positioning for absolute positioning */
+        {% comment %} overflow-y: hidden; {% endcomment %}
+      }
+
+      .arrow-left,
+      .arrow-right {
+         position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .arrow-left {
+      left: -999px;
+      }
+
+      .arrow-right {
+       right: -999px;
+
+      }
+
+      .middle-circle-wrapper {
+        padding-top: 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-content: center;
+        align-items: center;
+
+      }
+
+      .middle-circle-1 {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        color: white;
+      }
+
+      .middle-circle-1 p {
+        padding: 5px;
+        margin: 5px;
+        font-size: 12px;
+    }
+
+    .middle-circle-2 {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    .middle-circle-2 p {
+      padding: 5px;
+      margin: 5px;
+      font-size: 12px;
+  }
+
+    .goku {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+      .slider-outline-button-sec {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-content: center;
+        align-items: center;
+        margin-bottom: 110px;
+        margin-top: 10px;
+        {% comment %} 80px {% endcomment %}
+
+      }
+
+      /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+
+      .button-container {
+        position: absolute; /* Position the button container absolutely */
+        top: 90.7%; /* Adjust top position */
+        left: 50%; /* Adjust left position */
+        transform: translate(-50%, -50%); /* Center the button container */
+        z-index: 1; /* Ensure the button is on top */
+      }
+
+      .btnn {
+          background-color: rgb(61, 35, 93);
+          width: 205px;
+          height: 69px;
+          border-radius: 60px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-decoration: none;
+          color: white;
+          letter-spacing: 2px;
+          border: 1.5px solid rgb(192, 190, 195);
+          {% comment %} border-top: 0.5px solid rgba(255, 255, 255, 0.35);
+          border-left: 0.5px solid rgba(255, 255, 255, 0.35); {% endcomment %}
+          padding-left: 44px;
+          transition: 0.5s;
+          cursor: pointer;
+          position: relative;
+          font-weight: 300;
+          font-size: 15px;
+          letter-spacing:0cap;
+      }
+      .btnn:hover {
+        padding-left: 0px;
+        padding-right: 44px;
+        color: rgb(44, 51, 51);
+      }
+
+      .bally {
+          position: absolute;
+          width: 60px;
+          border: 1.5px solid white;
+          left: 3px;
+          height: 60px;
+          background-image: url("{{ 'slide.png' | asset_url }}");
+          background-size: cover;
+          background-position: center;
+          background-color: rgb(9, 9, 9);
+          border-radius: 50%;
+          transition: 0.01s ease;
+      }
+
+    {% comment %}
+      .sparkle {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        animation: sparkleAnimation 1s infinite alternate;
+      }
+
+      @keyframes sparkleAnimation {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1.2);
+          opacity: 0;
+        }
+      } {% endcomment %}
+      /* ---------------------------------------- ACCORDION */
+      /* ---------------------------------------- ACCORDION */
+
+      .accordion-item,
+      .accordion-item2,
+      .accordion-item3 {
+        border-bottom: 3px solid #ccc; /* Add border-bottom */
+        margin-bottom: 10px;
+      }
+
+      .accordion-title,
+      .accordion-title2,
+      .accordion-title3 {
+        padding: 15px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .accordion-content,
+      .accordion-content2,
+      .accordion-content3 {
+        display: none;
+        padding: 10px;
+      }
+
+      .accordion-item.active .accordion-content,
+      .accordion-item2.active .accordion-content2,
+      .accordion-item3.active .accordion-content3 {
+        display: block;
+      }
+
+
+
+
+      /* ---------------------------------------- POP UP */
+      /* ---------------------------------------- POP UP */
+      /* ---------------------------------------- POP UP */
+      /* ---------------------------------------- POP UP */
+      /* ---------------------------------------- POP UP */
+      /* ---------------------------------------- POP UP */
+
+      .popupclass {
+        position: fixed;
+        bottom: -1000px; /* Start off screen */
+        height: 250px;
+        width: 95%;
+        box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.1);
+        transition: bottom 0.3s ease; /* Transition for smooth animation */
+        z-index: 9999; /* Ensure the menu is on top */
+      }
+
+      .popupclass.active {
+        bottom: 25px; /* Move into view */
+        {% comment %} height: 475px; {% endcomment %}
+        border-radius: 30px;
+        border-radius: 10px;
+        width: 95%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow */
+        background-color: white;
+        padding: 10px;
+        margin: 0px;
+        overflow-y: auto !important; /* Enable scrolling for the specific div */
+
+      }
+
+      .popupclass-inner {
+
+        display: flex;
+        flex-direction: column;
+
+      }
+
+      .popupclass-wrapper {
+
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        align-items: center;
+        justify-content: space-between;
+        background-color: rgb(242, 237, 243);
+        border-radius: 10px;
+        margin: 10px;
+        padding: 10px;
+
+
+
+      }
+
+      .popupclass-wrapper-inner {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+
+      }
+
+      .popupclass-wrapper-inner-texts {
+        padding-left: 7px;
+      }
+
+      .add-to-cart-plus {
+        border: none;
+        width: 40px;
+        height: 40px;
+        background-color: #bb48e5;
+        border-radius: 10px;
+        padding: 10px;
+        color: white;
+      }
+
+      .add-to-cart-below-div {
+        margin: 10px;
+      }
+
+      .add-to-cart-below {
+        width: 100%;
+        border-radius: 10px;
+        background-color: #3185e4;
+        color: white;
+        padding: 20px;
+        border: none;
+
+      }
+
+      /* ---------------------------------------- POP UP 2 */
+      /* ---------------------------------------- POP UP 2*/
+      /* ---------------------------------------- POP UP 2*/
+      /* ---------------------------------------- POP UP 2*/
+
+       .popupclass2 {
+        position: fixed;
+        bottom: -1000px; /* Start off screen */
+        height: 500px;
+        width: 90%;
+        box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.1);
+        transition: bottom 0.3s ease; /* Transition for smooth animation */
+        z-index: 9999; /* Ensure the menu is on top */
+      }
+
+      .popupclass2.active {
+        bottom: 0; /* Move into view */
+        height: 550px;
+        border-radius: 30px;
+        width: 90%;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow */
+        background-color: white;
+        padding: 20px;
+        margin: 0px;
+      }
+
+
+      /* ---------------------------------------- POP UP 2 */
+      /* ----------------------------CART------------ POP UP 2*/
+      /* ---------------------------------------- POP UP 2*/
+      /* ---------------------------------------- POP UP 2*/
+
+
+
+
+      {% comment %} .empty-cart {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 17px; /* Set a default height */
+      }
+
+      .empty-cart div {
+        text-align: center;
+      }
+
+      .empty-cart i {
+        font-size: 2rem; /* Adjust icon size as needed */
+        margin-bottom: 10px; /* Add some spacing between the icon and text */
+      }
+
+      .empty-cart p {
+        margin: 0;
+      }
+
+      .subtototal-div {
+        display: flex;
+        flex-direction: row;
+        gap: 200px;
+        justify-content: space-between;
+      }
+      .cart-sec {
+        background-color: #f4f4f4;
+        padding: 20px;
+        overflow-y: auto !important;
+        {% comment %} height: 400px; {% endcomment %}
+      }
+
+      .cart-items {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto !important; /* Enable scrolling for the specific div */
+        height: 400px;
+      }
+
+      .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .item-details {
+        display: flex;
+        align-items: center;
+      }
+
+      .item-info {
+        margin-left: 7px;
+      }
+      .item-info h5 {
+        font-size: 10px;
+      }
+
+      .item-info a {
+        color: black; /* Blue color for the Remove link */
+        text-decoration: none;
+        font-size: 13px;
+        color: rgb(93, 92, 92);
+
+        margin-right: 5px; /* Add some space between the Remove link and the other controls */
+      }
+      .item-info a:hover {
+        text-decoration: underline; /* Underline the Remove link on hover */
+      }
+
+      .item-controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .item-controls a {
+        color: black; /* Blue color for the Remove link */
+        text-decoration: none;
+        margin-right: 10px; /* Add some space between the Remove link and the other controls */
+      }
+      .item-controls a:hover {
+        text-decoration: underline; /* Underline the Remove link on hover */
+      }
+      .item-controls button {
+        color: black; /* White text color */
+        border: none;
+        padding: 8px 16px;
+        margin-right: px; /* Add some space between the Update button and the select element */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer;
+      }
+      .item-controls button:hover {
+        color: black; /* White text color */
+        background-color: rgb(208, 204, 204);
+      }
+
+      .item-controls select {
+        padding: 8px;
+        border-radius: 5px; /* Rounded corners for the select element */
+        border: 1px solid #ccc; /* Light gray border */
+      }
+
+      /* Optional: Style the select arrow */
+      .item-controls select::-ms-expand {
+        display: none; /* Hide the default arrow for IE/Edge */
+      }
+
+      .item-controls select option {
+        color: #333333; /* Text color for options */
+      }
+
+      .cart-controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .cart-controls button {
+        padding: 10px 20px;
+        width: 100%;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .cart-controls button:hover {
+        background-color: rgb(18, 73, 145);
+      }
+
+      .selling-info {
+        color: rgb(93, 92, 92);
+        font-size: 13px;
+      } {% endcomment %}
+</style>
+
+{% schema %}
+{
+  "name": "scroll-product-slider",
+  "blocks": [
+    {
+      "type": "block2",
+      "name": "Block2",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "question",
+          "default": "link"
+        },
+        {
+          "type": "text",
+          "id": "answer",
+          "label": "answer",
+          "default": "link"
+        }
+      ]
+    },
+    {
+      "name": "Hero",
+      "type": "links",
+      "settings": [
+        {
+          "type": "text",
+          "id": "insidetxt",
+          "label": "insidetxt",
+          "default": "link"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "title",
+          "default": "link"
+        },
+        {
+          "type": "image_picker",
+          "id": "backgroundimg",
+          "label": "backgroundimg",
+          "info": "400 x 120px .png recommended"
+        },
+        {
+          "type": "image_picker",
+          "id": "imagemiddle",
+          "label": "imagemiddle",
+          "info": "400 x 120px .png recommended"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "description",
+          "default": "link"
+        },
+        {
+          "type": "text",
+          "id": "handlet",
+          "label": "handlet",
+          "default": "artist-on-court"
+        },
+
+        {
+          "type": "image_picker",
+          "id": "circle1",
+          "label": "circle1",
+          "info": "400 x 120px .png recommended"
+        },
+        {
+          "type": "text",
+          "id": "textcircle1",
+          "label": "textcircle1",
+          "default": "link"
+        },
+        {
+          "type": "text",
+          "id": "textcircle2",
+          "label": "textcircle2",
+          "default": "link"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#F4F4F4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "image_picker",
+      "id": "popupimg",
+      "label": "popupimg",
+      "info": "400 x 120px .png recommended"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_count",
+      "label": "Products to show",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    }
+  ],
+  "presets": [
+    {
+      "name": "scroll-product-slider"
+    }
+  ]
+}
+{% endschema %}

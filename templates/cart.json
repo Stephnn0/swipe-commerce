@@ -1,0 +1,19 @@
+{
+    "sections": {
+        "cart": {
+            "type": "cart",
+            "settings": {}
+          },
+          "upselling": {
+            "type": "upselling",
+            "settings": {}
+          }
+
+   
+      },
+      "order": [
+        "cart",
+        "upselling"
+      ]
+
+}

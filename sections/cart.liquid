@@ -1,0 +1,240 @@
+{% form 'cart', cart %}
+  <section class="cart-sec">
+    <h3>Home / Checkout</h3>
+    <hr>
+    {% if cart.empty? %}
+      <div class="empty-cart">
+        <div>
+          <i class="bi bi-bag"></i>
+          <p>Your Cart is Empty!</p>
+        </div>
+        <div>
+          <hr>
+    {% else %}
+      <div class="cart-items">
+        {% for item in cart.items %}
+          <div class="cart-item">
+            <div class="item-details">
+              <img
+                width="100"
+                height="100"
+                loading="lazy"
+                style="border-radius: 10px;"
+                src="{{ item.image | image_url}}"
+              >
+              <div class="item-info">
+                <h4>{{ item.title }}</h4>
+                <p>{{ item.final_line_price | money }}</p>
+                <a href="{{ item.url_to_remove }}">Remove</a>
+              </div>
+            </div>
+            <div class="item-controls">
+              <select name="updates[]">
+                <option
+                  value="1"
+                  {% if item.quantity == 1 %}
+                    selected
+                  {% endif %}
+                >
+                  1
+                </option>
+                <option
+                  value="2"
+                  {% if item.quantity == 2 %}
+                    selected
+                  {% endif %}
+                >
+                  2
+                </option>
+              </select>
+              <br>
+
+              <button type="submit" name="update">Update</button>
+            </div>
+          </div>
+        {% endfor %}
+        <div class="cart-controls">
+          <div class="subtototal-div">
+            <p>SubTotal:</p>
+            <p>{{ cart.total_price | money }}</p>
+          </div>
+          <hr>
+          <button type="submit" name="checkout">Place Order</button>
+        </div>
+      </div>
+      <div>
+        <p class="selling-info">
+          By accessing this website, we assume you accept these terms and conditions in full. Do not continue to use
+          [Your Company Name]'s website if you do not accept all of the terms and conditions stated on this page.
+        </p>
+      </div>
+    {% endif %}
+    <hr>
+  </section>
+{% endform %}
+
+<style>
+  .empty-cart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 367px; /* Set a default height */
+  }
+
+  .empty-cart div {
+    text-align: center;
+  }
+
+  .empty-cart i {
+    font-size: 2rem; /* Adjust icon size as needed */
+    margin-bottom: 10px; /* Add some spacing between the icon and text */
+  }
+
+  .empty-cart p {
+    margin: 0;
+  }
+
+  .subtototal-div {
+    display: flex;
+    flex-direction: row;
+    gap: 200px;
+    justify-content: space-between;
+  }
+  .cart-sec {
+    background-color: #f4f4f4;
+    padding: 20px;
+    overflow-y: auto !important; /* Enable scrolling for the specific div */
+    height: 400px;
+  }
+
+  .cart-items {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto !important; /* Enable scrolling for the specific div */
+    height: 400px;
+  }
+
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .item-details {
+    display: flex;
+    align-items: center;
+  }
+
+  .item-info {
+    margin-left: 7px;
+  }
+  .item-info h5 {
+    font-size: 10px;
+  }
+
+  .item-info a {
+    color: black; /* Blue color for the Remove link */
+    text-decoration: none;
+    font-size: 13px;
+    color: rgb(93, 92, 92);
+
+    margin-right: 5px; /* Add some space between the Remove link and the other controls */
+  }
+  .item-info a:hover {
+    text-decoration: underline; /* Underline the Remove link on hover */
+  }
+
+  .item-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .item-controls a {
+    color: black; /* Blue color for the Remove link */
+    text-decoration: none;
+    margin-right: 10px; /* Add some space between the Remove link and the other controls */
+  }
+  .item-controls a:hover {
+    text-decoration: underline; /* Underline the Remove link on hover */
+  }
+  .item-controls button {
+    color: black; /* White text color */
+    border: none;
+    padding: 8px 16px;
+    margin-right: px; /* Add some space between the Update button and the select element */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer;
+  }
+  .item-controls button:hover {
+    color: black; /* White text color */
+    background-color: rgb(208, 204, 204);
+  }
+
+  .item-controls select {
+    padding: 8px;
+    border-radius: 5px; /* Rounded corners for the select element */
+    border: 1px solid #ccc; /* Light gray border */
+  }
+
+  /* Optional: Style the select arrow */
+  .item-controls select::-ms-expand {
+    display: none; /* Hide the default arrow for IE/Edge */
+  }
+
+  .item-controls select option {
+    color: #333333; /* Text color for options */
+  }
+
+  .cart-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .cart-controls button {
+    padding: 10px 20px;
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .cart-controls button:hover {
+    background-color: rgb(18, 73, 145);
+  }
+
+  .selling-info {
+    color: rgb(93, 92, 92);
+    font-size: 13px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "cart",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#F4F4F4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "cart"
+    }
+  ]
+}
+{% endschema %}

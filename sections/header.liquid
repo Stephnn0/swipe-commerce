@@ -1,0 +1,124 @@
+<section class="navbar-section">
+  <div class="navbar">
+    <div class="navbar-left">
+      {%- if section.settings.storeimg != blank -%}
+        <div class="store-nav-img">
+          <h1></h1>
+        </div>
+      {%- else -%}
+        <div class="store-nav-img-default">
+          <h1></h1>
+        </div>
+      {%- endif -%}
+      <div>
+        <p>{{ section.settings.titlenav }}</p>
+      </div>
+    </div>
+    <div class="navbar-right">
+      {% for block in section.blocks %}
+        <div>
+          <img
+            width="30px"
+            height="30px"
+            loading="lazy"
+            style="padding: 10px;"
+            alt="img"
+            src="{{ block.settings.navicon | image_url }}"
+          >
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .navbar-section {
+    /*  height: 100px;  Adjust the height of your navbar */
+  }
+
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: transparent; /* Adjust background color as needed */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow for a better visual effect */
+    z-index: 1000; /* Ensure the navbar stays on top of other content */
+    display: flex;
+    justify-content: space-between;
+    padding: 7px;
+    color: {{ section.settings.navcolor }};
+  }
+
+  .navbar-left {
+    display: flex;
+  }
+
+  .navbar-right {
+    display: flex;
+  }
+
+  .store-nav-img {
+    background-image: url("{{ section.settings.storeimg | image_url }}");
+    width: 40px;
+    height: 40px;
+    border-radius: 150px;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    margin-right: 7px;
+    border: 2px solid {{ section.settings.bordercolor }};
+  }
+  .store-nav-img-default {
+    background-image: url("{{ 'default.jpg' | asset_url }}");
+    width: 40px;
+    height: 40px;
+    border-radius: 150px;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    margin-right: 7px;
+    border: 2px solid black;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Navbar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "titlenav",
+      "label": "titlenav",
+      "default": "link"
+    },
+    {
+      "type": "image_picker",
+      "id": "storeimg",
+      "label": "storeimg",
+      "info": "400 x 120px .png recommended"
+    },
+    {
+      "type": "color",
+      "id": "navcolor",
+      "label": "Text Color",
+      "default": "#000000"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Icons",
+      "type": "links",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "navicon",
+          "label": "navicon",
+          "info": "400 x 120px .png recommended"
+        }
+      ]
+    }
+  ],
+  "presets": []
+}
+{% endschema %}

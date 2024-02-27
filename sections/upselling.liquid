@@ -1,0 +1,232 @@
+{%- capture section_settings -%}
+  {%- assign collection = section.settings.collection -%}
+  {%- endcapture -%}
+
+<section
+  data-section-type="all-products"
+  data-section-settings="{{ section_settings }}"
+  data-section-id="{{ section.id }}"
+  class="products-grid-all-products"
+>
+  {%- if collection == blank -%}
+    <div class="one">
+      <h1></h1>
+    </div>
+  {%- else -%}
+    {% comment %}
+      <div class="prod-avb-grid">
+        <h4>{{- collection.title }}</h4>
+        <a href="{{- collection.url }}">See All</a>
+      </div>
+    {% endcomment %}
+    {%- assign products = collection.products -%}
+
+    <div class="products-grid-container">
+      <div class="products-grid-wrapper">
+        {%- for product in products limit: section.settings.products_count -%}
+          {% form 'product', product %}
+            <div class="products-grid-card">
+              <a href="{{ product.url }}">
+                <img
+                  width="340"
+                  height="340"
+                  loading="lazy"
+                  style="border-radius: 20px;"
+                  src="{{ product.featured_image | image_url }}"
+                >
+              </a>
+              <div class="inner-grid">
+                <div>
+                  {% comment %}
+                    <p>{{- product.title }}</p>
+                    <p>{{- product.price | money }}</p>
+                  {% endcomment %}
+                  <input name="id" type="hidden" value="{{ product.variants[0].id }}">
+                  <input type="submit" value="Add to cart" class="add-to-cart">
+                </div>
+                {% comment %}
+                  <button type="submit" value="Add to cart" class="add-to-cart-grid">
+                    <i class="bi bi-bag-heart icon-300"></i>
+                  </button>
+                {% endcomment %}
+              </div>
+            </div>
+          {% endform %}
+        {% endfor %}
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+    addToCartButtons.forEach((button) => {
+      button.addEventListener('click', function () {
+        const productId = button.parentElement.querySelector('input[name="id"]').value;
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            id: productId,
+            quantity: 1, // You can adjust the quantity as needed
+          }),
+        })
+          .then((response) => {
+            if (response.ok) {
+              alert('Product added to cart successfully!');
+            } else {
+              throw new Error('Failed to add product to cart');
+            }
+          })
+          .catch((error) => console.error('Error adding product to cart:', error));
+      });
+    });
+  });
+</script>
+<style>
+    .add-to-cart-grid {
+    border: none;
+    cursor: pointer;
+    }
+    .icon-300 { font-size: 15px; }
+
+    .icon-300:hover { color: rgb(16, 115, 214); }
+
+
+    .prod-avb-grid {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        align-items: center;
+        align-content: center;
+      }
+
+      .prod-avb-grid a {
+        text-decoration: none;
+        color: rgb(16, 115, 214);
+        font-size: 10px;
+      }
+
+      .prod-avb-grid a:hover {
+        text-decoration: underline;
+
+      }
+
+
+  .products-grid-all-products {
+    background: {{ section.settings.background }}
+    ;
+    padding: 10px;
+  }
+
+  .one {
+    background-image: url("{{ 'default.jpg' | asset_url }}");
+    width: 310px;
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+    padding: 18px;
+    border: 3px solid black
+  }
+
+
+  .products-grid-wrapper {
+
+    display: grid;
+    background: {{ section.settings.background }};
+    color: {{ section.settings.text_color }};
+    grid-template-columns: repeat(2, 1fr);  Add smooth transition effect */
+
+  }
+
+  .products-grid-all-products {
+    background: {{ section.settings.background }};
+    padding: 10px;
+  }
+
+  .products-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); /* Two columns with minimum width of 340px */
+    gap: 20px; /* Adjust the gap between grid items */
+  }
+
+  .products-grid-card {
+    box-sizing: border-box;
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    transition: transform 0.3s ease; /* Add smooth transition effect */
+  }
+
+  .inner-grid {
+    font-size: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+
+  }
+
+
+  .products-grid-card:hover {
+    transform: scale(1.1); /* Scale up the card on hover */
+  }
+
+  .products-grid-card img {
+    width: 165; /* Ensure the image fills the container */
+    height: 165; /* Maintain aspect ratio */
+    border-radius: 10px; /* Apply border radius */
+  }
+
+  .products-grid-card h3 a {
+    color: black;
+    text-decoration: none;
+  }
+
+  .products-grid-card a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "upselling",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_count",
+      "label": "Products to show",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#f0f0f0"
+    }
+  ],
+  "presets": [
+    {
+      "name": "upselling"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,12 @@
+{
+  "sections": {
+      "mockup": {
+      "type": "mockup",
+      "settings": {}
+    }
+
+  },
+  "order": [
+    "mockup"
+  ]
+}

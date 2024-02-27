@@ -1,0 +1,488 @@
+{% comment %}
+  <section class="slider-outline-top">
+    <div class="slider-outline-top-wrapper">
+      {% for block in section.blocks %}
+        <div
+          class="slider-outline"
+          style="
+            background-image: url('{{ block.settings.backgroundimg | image_url }}');
+            background-size: cover;
+            background-position: center;
+            height: 100%;
+          "
+        >
+          {% comment %} {% assign handle = '{{ section.settings.texthandle }}' %} {% endcomment %}
+          {% assign brain = block.settings.handlet %}
+          {% assign product = all_products[brain] %}
+
+          {% comment %}
+            {% assign product_form_id = 'productForm-' | append: block.id %}
+            {% form 'product', product, id: product_form_id %}
+          {% endcomment %}
+          {% form 'product', product %}
+            {% comment %}---------------------- titles ----------------- {% endcomment %}
+            {% comment %}---------------------- titles ----------------- {% endcomment %}
+            {% comment %}---------------------- titles ----------------- {% endcomment %}
+            {% comment %} <h1>title testing: {{ product.title }}</h1> {% endcomment %}
+            <div class="slider-outline-title-sec">
+              {% comment %}
+                <img
+                  width="100px"
+                  height="25px"
+                  loading="lazy"
+                  alt="img"
+                  src="{{ 'starts.png' | asset_url }}"
+                >
+              {% endcomment %}
+              <h1>{{ block.settings.title }}</h1>
+              <p>{{ block.settings.description }}</p>
+            </div>
+            {% comment %}---------------------- middle ----------------- {% endcomment %}
+            {% comment %}---------------------- middle ----------------- {% endcomment %}
+            {% comment %}---------------------- middle ----------------- {% endcomment %}
+
+            <div>
+              <img
+                width="250px"
+                height="250px"
+                loading="lazy"
+                class="single-pop-img-1"
+                style="border-radius: 150px;"
+                alt="img"
+                src="{{ block.settings.imagemiddle | image_url }}"
+              >
+            </div>
+            {% comment %}---------------------- middle circles ----------------- {% endcomment %}
+            {% comment %}---------------------- middle circles----------------- {% endcomment %}
+            {% comment %}---------------------- middle circles----------------- {% endcomment %}
+            <div class="middle-circle-wrapper">
+              <div class="middle-circle-1">
+                <img
+                  width="40px"
+                  height="40px"
+                  loading="lazy"
+                  class="single-pop-img-1"
+                  style="border-radius: 150px;"
+                  alt="img"
+                  src="{{ block.settings.circle1 | image_url }}"
+                >
+                <p>{{ block.settings.textcircle1 }}</p>
+              </div>
+              <div class="middle-circle-1">
+                <img
+                  width="40px"
+                  height="40px"
+                  loading="lazy"
+                  class="single-pop-img-1"
+                  style="border-radius: 150px;"
+                  alt="img"
+                  src="{{ block.settings.circle1 | image_url }}"
+                >
+                <p>{{ block.settings.textcircle1 }}</p>
+              </div>
+              <div class="middle-circle-1">
+                <img
+                  width="40px"
+                  height="40px"
+                  loading="lazy"
+                  class="single-pop-img-1"
+                  style="border-radius: 150px;"
+                  alt="img"
+                  src="{{ block.settings.circle1 | image_url }}"
+                >
+                <p>{{ block.settings.textcircle1 }}</p>
+              </div>
+            </div>
+
+            {% comment %}---------------------- button ----------------- {% endcomment %}
+            {% comment %}---------------------- button ----------------- {% endcomment %}
+            {% comment %}---------------------- button ----------------- {% endcomment %}
+
+            <div class="slider-outline-button-sec">
+              {% comment %}
+                <h1>variantes: {{ product.variants.first.id }}</h1>
+                <h1>variantes 2: {{ product.variants[0].id }}</h1>
+                <h1>variantes 3: {{ product.id }}</h1>
+                <h1>variantes 4: {{ product.variants }}</h1>
+                <button style="display: block;" id="productLink2">{{ form | payment_button }}</button>
+              {% endcomment %}
+              <input name="id" type="hidden" value="{{ product.variants.first.id }}">
+
+              <button
+                style="display: none;"
+                id="productLink2"
+                type="button"
+                class="btn product-form__cart-submit btn--secondary-accent"
+                data-buy-now
+              >
+                <span> Buy now </span>
+              </button>
+              <a id="productLink" class="btnn ">
+                Slide to Purchase
+                <span class="bally"></span
+              ></a>
+            </div>
+
+            {% comment %}---------------------- button ----------------- {% endcomment %}
+            {% comment %}---------------------- button ----------------- {% endcomment %}
+            {% comment %}---------------------- button ----------------- {% endcomment %}
+          {% endform %}
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <script>
+            //--------------------------------------------
+      //--------------------------------------------
+      //--------------------------------------------
+      document.querySelector('[data-buy-now]').addEventListener('click', () => {
+        let addToCartForm = document.querySelector('form[action$="/cart/add"]');
+        console.log(addToCartForm, 'addToCartForm')
+        let formData = new FormData(addToCartForm);
+        fetch(window.Shopify.routes.root + 'cart/add.js', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => {
+          window.location.href = '/checkout';
+          return response.json();
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      });
+
+
+      //--------------------------------------------
+      //--------------------------------------------
+      //--------------------------------------------
+
+       //----------------------SLIDER----------------
+      //--------------------------------------------
+      //--------------------------------------------
+
+      const btnnList = document.querySelectorAll('.btnn');
+
+      btnnList.forEach((btnn) => {
+        const bally = btnn.querySelector('.bally');
+        const productUrl = '{{ product.url }}';
+        let originalLeft = 0;
+        let isDragging = false;
+
+        bally.addEventListener('mousedown', startDragging);
+        bally.addEventListener('touchstart', startDragging);
+
+        function startDragging(e) {
+          e.preventDefault();
+          isDragging = true;
+          const startX = e.clientX || e.touches[0].clientX;
+          const initialLeft = parseFloat(window.getComputedStyle(bally).left);
+          {% comment %} navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+          console.log(navigator.vibrate, 'vi');
+          navigator.vibrate([100]);
+          navigator.vibrate([500]);
+          navigator.vibrate(500);
+          window.navigator.vibrate(100); {% endcomment %}
+
+          // Add the sparkling span
+          const sparkle = document.createElement('span');
+          sparkle.classList.add('sparkle');
+          bally.appendChild(sparkle);
+          btnn.style.color = 'green';
+          btnn.style.backgroundColor = 'dimgray';
+
+          document.addEventListener('mousemove', drag);
+          document.addEventListener('touchmove', drag);
+
+          document.addEventListener('mouseup', stopDragging);
+          document.addEventListener('touchend', stopDragging);
+
+           //--------------------------------------------------------------------------------------
+          //--------------------------------------------------------------------------------------
+         //--------------------------------------------------------------------------------------
+         //--------------------------------------------------------------------------------------
+
+          function drag(e) {
+            e.preventDefault();
+
+            if (!isDragging) return;
+            const newX = e.clientX || e.touches[0].clientX;
+            const diffX = newX - startX;
+            const newLeft = initialLeft + diffX;
+            const maxLeft = btnn.offsetWidth - bally.offsetWidth;
+            bally.style.left = `${Math.min(maxLeft, Math.max(0, newLeft))}px`;
+
+            // Update the text position based on the span's position
+            if (newLeft >= maxLeft) {
+              document.getElementById('productLink2').click(); // Simulate a click on the hidden product link
+
+
+                console.log('fhfhfhfhfhfh')
+
+
+              stopDragging();
+            }
+          }
+          //--------------------------------------------------------------------------------------
+          //--------------------------------------------------------------------------------------
+         //--------------------------------------------------------------------------------------
+         //--------------------------------------------------------------------------------------
+          function stopDragging() {
+            isDragging = false;
+            bally.style.left = `${originalLeft}px`; // Return to the original position
+            btnn.style.color = 'white';
+            btnn.style.backgroundColor = 'black';
+
+            document.removeEventListener('mousemove', drag);
+            document.removeEventListener('touchmove', drag);
+            document.removeEventListener('mouseup', stopDragging);
+            document.removeEventListener('touchend', stopDragging);
+          }
+        }
+        bally.addEventListener('mousedown', startDragging);
+        bally.addEventListener('touchstart', startDragging);
+      });
+  </script>
+
+  <style>
+      .slider-outline-top {
+        {% comment %} position: relative;
+        overflow-x: auto;
+        scrollbar-width: none; /* For Firefox */
+        -ms-overflow-style: none; /* For Internet Explorer and Edge */
+        white-space: nowrap; /* Prevent items from wrapping */ {% endcomment %}
+        color: white;
+
+      }
+
+      .slider-outline-top-wrapper {
+        position: relative;
+        overflow-x: auto;
+        white-space: nowrap; /* Prevent items from wrapping */
+        scrollbar-width: none; /* For Firefox */
+        -ms-overflow-style: none; /* For Internet Explorer and Edge */
+        display: flex;
+        transition: transform 0.3s ease; /* Add smooth transition effect */
+
+      }
+
+      {% comment %} .slider-outline-top-wrapper:hover {
+        transform: translateX(-100px); /* Example: Adjust the transition width by -20px */
+      } {% endcomment %}
+
+      .slider-outline {
+        height: 100%;
+        min-width: 100%; /* Set a fixed width for each item */
+        margin-right: 1px; /* Add some margin between items */
+        background-color: white;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+      }
+
+      .slider-outline-title-sec {
+        {% comment %} 80 with stars {% endcomment %}
+        padding-top: 190px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        padding-bottom: 50px;
+        color: white;
+      }
+
+      .slider-outline-title-sec h1 {
+        font-size: 46px;
+        padding: 10px;
+        margin: 0px;
+        color: white;
+      }
+      .slider-outline-title-sec p {
+        color: white;
+        padding: 10px;
+        margin: 0px;
+      }
+
+      .middle-circle-wrapper {
+        padding-top: 35px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-content: center;
+        align-items: center;
+        padding-bottom: 20px;
+      }
+
+      .middle-circle-1 {
+        display: flex;
+        flex-direction: column;
+        justify-content: cen20pxter;
+        align-content: center;
+        align-items: center;
+        color: white;
+      }
+
+      .slider-outline-button-sec {
+        padding-bottom: 25px;
+      }
+
+      /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+
+      .button-container {
+        position: absolute; /* Position the button container absolutely */
+        top: 90.7%; /* Adjust top position */
+        left: 50%; /* Adjust left position */
+        transform: translate(-50%, -50%); /* Center the button container */
+        z-index: 1; /* Ensure the button is on top */
+      }
+
+      .btnn {
+          background-color: rgb(61, 35, 93);
+          width: 205px;
+          height: 65px;
+          border-radius: 60px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-decoration: none;
+          color: white;
+          letter-spacing: 2px;
+          border: 1.5px solid rgb(192, 190, 195);
+          {% comment %} border-top: 0.5px solid rgba(255, 255, 255, 0.35);
+          border-left: 0.5px solid rgba(255, 255, 255, 0.35); {% endcomment %}
+          padding-left: 44px;
+          transition: 0.5s;
+          cursor: pointer;
+          position: relative;
+          font-weight: 300;
+          font-size: 15px;
+          letter-spacing:0cap;
+      }
+      .btnn:hover {
+        padding-left: 0px;
+        padding-right: 44px;
+        color: rgb(44, 51, 51);
+      }
+
+      .bally {
+          position: absolute;
+          width: 60px;
+          border: 1.5px solid white;
+          left: 3px;
+          height: 60px;
+          background-image: url("{{ 'slide.png' | asset_url }}");
+          background-size: cover;
+          background-position: center;
+          background-color: rgb(9, 9, 9);
+          border-radius: 50%;
+          transition: 0.01s ease;
+      }
+
+    {% comment %}
+      .sparkle {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        animation: sparkleAnimation 1s infinite alternate;
+      }
+
+      @keyframes sparkleAnimation {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1.2);
+          opacity: 0;
+        }
+      } {% endcomment %}
+  </style>
+
+  {% schema %}
+  {
+    "name": "scroll-product-slider",
+    "blocks": [
+      {
+        "name": "Hero",
+        "type": "links",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "title",
+            "default": "link"
+          },
+          {
+            "type": "image_picker",
+            "id": "backgroundimg",
+            "label": "backgroundimg",
+            "info": "400 x 120px .png recommended"
+          },
+          {
+            "type": "image_picker",
+            "id": "imagemiddle",
+            "label": "imagemiddle",
+            "info": "400 x 120px .png recommended"
+          },
+          {
+            "type": "text",
+            "id": "description",
+            "label": "description",
+            "default": "link"
+          },
+          {
+            "type": "text",
+            "id": "handlet",
+            "label": "handlet",
+            "default": "link"
+          },
+
+          {
+            "type": "image_picker",
+            "id": "circle1",
+            "label": "circle1",
+            "info": "400 x 120px .png recommended"
+          },
+          {
+            "type": "text",
+            "id": "textcircle1",
+            "label": "textcircle1",
+            "default": "link"
+          }
+        ]
+      }
+    ],
+    "settings": [
+      {
+        "type": "color",
+        "id": "background",
+        "label": "Background",
+        "default": "#F4F4F4"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text",
+        "default": "#000000"
+      }
+    ],
+    "presets": [
+      {
+        "name": "scroll-product-slider"
+      }
+    ]
+  }
+  {% endschema %}
+{% endcomment %}

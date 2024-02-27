@@ -1,0 +1,307 @@
+<section id="cartSection">
+  <section class="cart-sec">
+    <div id="cartItemsContainer">
+      <!-- Cart items will be displayed here -->
+    </div>
+    <div class="cart-controls">
+      <div class="subtototal-div">
+        <p>SubTotal:</p>
+        <p id="subtotal"></p>
+      </div>
+      <button id="checkoutBtn">Place Order</button>
+    </div>
+  </section>
+  <div>
+    {%- capture section_settings -%}
+    {%- assign collection = section.settings.collection -%}
+    {%- endcapture -%}
+
+    <section
+      data-section-type="all-products"
+      data-section-settings="{{ section_settings }}"
+      data-section-id="{{ section.id }}"
+      class="products-grid-all-products"
+    >
+      {%- if collection == blank -%}
+        <div class="one">
+          <h1></h1>
+        </div>
+      {%- else -%}
+        {%- assign products = collection.products -%}
+
+        <div class="products-grid-container">
+          <div class="products-grid-wrapper">
+            {%- for product in products limit: section.settings.products_count -%}
+              <div class="upselling-wrapper">
+                {% form 'product', product %}
+                  <div class="products-grid-card">
+                    <img
+                      width="90px"
+                      height="90px"
+                      loading="lazy"
+                      style="border-radius: 10px;"
+                      src="{{ product.featured_image | image_url }}"
+                    >
+                    <div>
+                      <p>{{- product.title }}</p>
+                      <p>{{- product.price | money }}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <input name="id" type="hidden" value="{{ product.variants[0].id }}">
+                    <button class="add-to-cart">Add To Cart</button>
+                  </div>
+                {% endform %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {%- endif -%}
+    </section>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+    addToCartButtons.forEach((button) => {
+      button.addEventListener('click', function () {
+        const productId = button.parentElement.querySelector('input[name="id"]').value;
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            id: productId,
+            quantity: 1, // You can adjust the quantity as needed
+          }),
+        })
+          .then((response) => {
+            if (response.ok) {
+              alert('Product added to cart successfully!');
+              window.location.href = '/'; // Redirect to home page
+            } else {
+              throw new Error('Failed to add product to cart');
+            }
+          })
+          .catch((error) => console.error('Error adding product to cart:', error));
+      });
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // Function to fetch and display cart items
+    function displayCart() {
+      fetch('/cart.json')
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data, 'data');
+          const cartItemsContainer = document.getElementById('cartItemsContainer');
+          cartItemsContainer.innerHTML = ''; // Clear previous content
+
+          if (data.items.length === 0) {
+            cartItemsContainer.innerHTML =
+              '<div class="empty-cart"><div><i class="bi bi-bag"></i><p>Your Cart is Empty!</p></div><div><hr></div></div>';
+          } else {
+            data.items.forEach((item) => {
+              const cartItemDiv = document.createElement('div');
+              cartItemDiv.classList.add('cart-item');
+              cartItemDiv.dataset.productId = item.id; // Set dataset for product id
+
+              const itemDetailsDiv = document.createElement('div');
+              itemDetailsDiv.classList.add('item-details');
+
+              const itemImage = document.createElement('img');
+              itemImage.src = item.image;
+              itemImage.width = 100;
+              itemImage.height = 100;
+              itemImage.loading = 'lazy';
+              itemImage.style.borderRadius = '10px';
+
+              const itemInfoDiv = document.createElement('div');
+              itemInfoDiv.classList.add('item-info');
+              const itemName = document.createElement('h4');
+              itemName.textContent = item.title;
+              const itemPrice = document.createElement('p');
+              itemPrice.textContent = item.final_line_price;
+
+              itemInfoDiv.appendChild(itemName);
+              itemInfoDiv.appendChild(itemPrice);
+
+              const removeLink = document.createElement('a');
+              removeLink.href = '#';
+              removeLink.textContent = 'Remove';
+              removeLink.addEventListener('click', function (event) {
+                event.preventDefault();
+                console.log(item.id, 'itemkey');
+                console.log(item.key, 'itemkey');
+
+                removeFromCart(item.variant_id); // Pass item key to removeFromCart function
+                // removeFromCartByVariantId(item.id);
+              });
+
+              itemDetailsDiv.appendChild(itemImage);
+              itemDetailsDiv.appendChild(itemInfoDiv);
+              itemDetailsDiv.appendChild(removeLink);
+
+              const itemControlsDiv = document.createElement('div');
+              itemControlsDiv.classList.add('item-controls');
+              const selectQuantity = document.createElement('select');
+              selectQuantity.name = 'updates[]';
+              for (let i = 1; i <= 10; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                if (item.quantity === i) {
+                  option.selected = true;
+                }
+                selectQuantity.appendChild(option);
+              }
+              const updateBtn = document.createElement('button');
+              updateBtn.type = 'submit';
+              updateBtn.name = 'update';
+              updateBtn.textContent = 'Update';
+              updateBtn.addEventListener('click', function (event) {
+                event.preventDefault();
+                updateCartItem(item.key, selectQuantity.value);
+              });
+
+              itemControlsDiv.appendChild(selectQuantity);
+              itemControlsDiv.appendChild(document.createElement('br'));
+              itemControlsDiv.appendChild(updateBtn);
+
+              cartItemDiv.appendChild(itemDetailsDiv);
+              cartItemDiv.appendChild(itemControlsDiv);
+
+              cartItemsContainer.appendChild(cartItemDiv);
+            });
+          }
+
+          // Output the ids of the products in the cart
+          console.log(
+            'Product IDs in Cart:',
+            data.items.map((item) => item.key)
+          );
+
+          document.getElementById('subtotal').textContent = data.total_price;
+        })
+        .catch((error) => console.error('Error fetching cart:', error));
+    }
+
+    // Function to remove item from cart
+    function removeFromCart(itemKey) {
+      console.log(typeof itemKey, 'itemkey');
+      console.log(itemKey, 'itemkey');
+
+      let int = parseInt(itemKey);
+      console.log(typeof int, 'int');
+
+      fetch(`/cart/change.js?line=${int}&quantity=0`, { method: 'POST' })
+        .then((response) => {
+          if (response.ok) {
+            displayCart(); // Refresh cart after removal
+          } else {
+            throw new Error('Failed to remove item from cart');
+          }
+        })
+        .catch((error) => console.error('Error removing item from cart:', error));
+    }
+
+    // Function to update quantity of item in cart
+    function updateCartItem(itemKey, quantity) {
+      fetch(`/cart/change.js?line=${itemKey}&quantity=${quantity}`, { method: 'POST' })
+        .then((response) => {
+          if (response.ok) {
+            displayCart(); // Refresh cart after update
+          } else {
+            throw new Error('Failed to update item quantity');
+          }
+        })
+        .catch((error) => console.error('Error updating item quantity:', error));
+    }
+
+    // Checkout function
+    document.getElementById('checkoutBtn').addEventListener('click', function () {
+      let cartItems = document.querySelectorAll('.cart-item');
+
+      let items = [];
+
+      cartItems.forEach((cartItem) => {
+        let productId = cartItem.dataset.productId;
+        let quantity = cartItem.querySelector('select[name="updates[]"]').value;
+
+        // Extract variant ID dynamically
+        let variantId = null;
+        let variantInput = cartItem.querySelector('input[name="variant_id"]');
+        if (variantInput) {
+          variantId = variantInput.value;
+        }
+
+        items.push({
+          id: productId,
+          quantity: quantity,
+          variant_id: variantId,
+        });
+      });
+
+      let formData = new FormData();
+      items.forEach((item) => {
+        formData.append('items[][id]', item.id);
+        formData.append('items[][quantity]', item.quantity);
+        if (item.variant_id) {
+          formData.append('items[][properties][_id]', item.variant_id);
+        }
+      });
+
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        body: formData,
+      })
+        .then((response) => {
+          // If item added to cart successfully, redirect to checkout
+          if (response.ok) {
+            window.location.href = '/checkout';
+          } else {
+            throw new Error('Failed to add item to cart');
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    });
+
+    // Call displayCart initially
+    displayCart();
+  });
+</script>
+
+<style>
+  .products-grid-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+  }
+
+  .products-grid-wrapper {
+    display: flex;
+    gap: 10px; /* Adjust as needed */
+  }
+
+  .products-grid-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin: 10px;
+    padding: 10px;
+  }
+
+  .upselling-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

@@ -1,0 +1,347 @@
+<section>
+  <div
+    class="slider-outline"
+    style="
+      background-image: {{ back.png | asset_url }};
+      background-color: white;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      background-repeat: no-repeat;
+      width: 100%;
+      height: 100vh;
+    "
+  >
+    <div class="block1"><p></p></div>
+    <div class="block2"><p></p></div>
+
+    {% comment %}---------------------- middle circles ----------------- {% endcomment %}
+    {% comment %}---------------------- middle circles----------------- {% endcomment %}
+    {% comment %}---------------------- middle circles----------------- {% endcomment %}
+    <div class="middle-circle-wrapper-mock">
+      <div class="middle-circle-1" onclick="toggleMenu()">
+        <img
+          width="40px"
+          height="40px"
+          loading="lazy"
+          class="single-pop-img-1"
+          style="border-radius: 150px;"
+          alt="img"
+          src="{{ block.settings.circle1 | image_url }}"
+        >
+        <p>{{ block.settings.textcircle1 }}</p>
+      </div>
+      <div class="middle-circle-1">
+        <img
+          width="40px"
+          height="40px"
+          loading="lazy"
+          class="single-pop-img-1"
+          style="border-radius: 150px;"
+          alt="img"
+          src="{{ block.settings.circle1 | image_url }}"
+        >
+        <p>{{ block.settings.textcircle1 }}</p>
+      </div>
+      <div class="middle-circle-1">
+        <img
+          width="40px"
+          height="40px"
+          loading="lazy"
+          class="single-pop-img-1"
+          style="border-radius: 150px;"
+          alt="img"
+          src="{{ block.settings.circle1 | image_url }}"
+        >
+        <p>{{ block.settings.textcircle1 }}</p>
+      </div>
+    </div>
+
+    {% comment %}---------------------- button ----------------- {% endcomment %}
+    {% comment %}---------------------- button ----------------- {% endcomment %}
+    {% comment %}---------------------- button ----------------- {% endcomment %}
+
+    <div class="slider-outline-button-sec-mock">
+      <input name="id" type="hidden" value="{{ product.variants.first.id }}">
+
+      <button
+        style="display: none;"
+        id="productLink2"
+        type="button"
+        class="btn product-form__cart-submit btn--secondary-accent"
+        data-buy-now
+      >
+        <span> Buy now </span>
+      </button>
+      <a id="productLink" class="btnn ">
+        Slide to Purchase
+        <span class="bally"></span
+      ></a>
+    </div>
+
+    {% comment %}---------------------- button ----------------- {% endcomment %}
+    {% comment %}---------------------- button ----------------- {% endcomment %}
+    {% comment %}---------------------- button ----------------- {% endcomment %}
+  </div>
+  <div class="testpopup" id="testpopup">
+    {% render 'card2' %}
+  </div>
+</section>
+
+<script>
+  {% comment %} function toggleMenu() {
+    const menuPopover2 = document.getElementById('testpopup');
+    menuPopover2.classList.toggle('active');
+  } {% endcomment %}
+
+  //--------------------------------------------
+  //--------------------------------------------
+  //--------------------------------------------
+
+  //----------------------SLIDER----------------
+  //--------------------------------------------
+  //--------------------------------------------
+
+  const btnnList = document.querySelectorAll('.btnn');
+
+  btnnList.forEach((btnn) => {
+    const bally = btnn.querySelector('.bally');
+    const container = btnn.closest('.btnn'); // Add this line to reference the container
+
+    const productUrl = '{{ product.url }}';
+    let originalLeft = 0;
+    let isDragging = false;
+
+    let initialWidth; // Define initialWidth variable outside of startDragging function
+
+    bally.addEventListener('mousedown', startDragging);
+    bally.addEventListener('touchstart', startDragging);
+
+    function startDragging(e) {
+      e.preventDefault();
+      isDragging = true;
+      const startX = e.clientX || e.touches[0].clientX;
+      const initialLeft = parseFloat(window.getComputedStyle(bally).left);
+
+      initialWidth = parseFloat(window.getComputedStyle(container).width);
+
+      // Add the sparkling span
+      const sparkle = document.createElement('span');
+      sparkle.classList.add('sparkle');
+      bally.appendChild(sparkle);
+      btnn.style.color = 'green';
+      btnn.style.backgroundColor = 'dimgray';
+
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('touchmove', drag);
+
+      document.addEventListener('mouseup', stopDragging);
+      document.addEventListener('touchend', stopDragging);
+
+      //--------------------------------------------------------------------------------------
+      //--------------------------------------------------------------------------------------
+      //--------------------------------------------------------------------------------------
+      //--------------------------------------------------------------------------------------
+
+      function drag(e) {
+        e.preventDefault();
+
+        if (!isDragging) return;
+        const newX = e.clientX || e.touches[0].clientX;
+        const diffX = newX - startX;
+        const newLeft = initialLeft + diffX;
+        const maxLeft = btnn.offsetWidth - bally.offsetWidth * 1.1;
+
+        const shrinkFactor = 10; // Adjust the shrink factor as needed
+
+        const newWidth = initialWidth - diffX * shrinkFactor; // Adjust calculation for new width
+
+        bally.style.left = `${Math.min(maxLeft, Math.max(0, newLeft))}px`;
+
+        container.style.width = `${Math.max(0, newWidth)}px`;
+
+        // Update the text position based on the span's position
+        if (newLeft >= maxLeft) {
+          document.getElementById('productLink2').click(); // Simulate a click on the hidden product link
+
+          console.log('fhfhfhfhfhfh');
+
+          stopDragging();
+        }
+      }
+      //--------------------------------------------------------------------------------------
+      //--------------------------------------------------------------------------------------
+      //--------------------------------------------------------------------------------------
+      //--------------------------------------------------------------------------------------
+      function stopDragging() {
+        isDragging = false;
+        bally.style.left = `${originalLeft}px`; // Return to the original position
+        container.style.width = `${initialWidth}px`; // Return to the original width
+
+        btnn.style.color = 'white';
+        btnn.style.backgroundColor = 'black';
+
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('touchmove', drag);
+        document.removeEventListener('mouseup', stopDragging);
+        document.removeEventListener('touchend', stopDragging);
+      }
+    }
+    bally.addEventListener('mousedown', startDragging);
+    bally.addEventListener('touchstart', startDragging);
+  });
+</script>
+
+<style>
+  {% comment %} .testpopup {
+    position: fixed;
+    bottom: -1000px; /* Start off screen */
+    height: 300px
+    left: 0px;
+    box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.1);
+    transition: bottom 0.3s ease; /* Transition for smooth animation */
+    z-index: 9999; /* Ensure the menu is on top */
+  }
+
+  .testpopup.active {
+    bottom: 0; /* Move into view */
+   {% comment %} left: 50%;
+    transform: translateX(-50%); {% endcomment %}
+    height: 250px;
+    border-radius: 30px;
+    left: 0; /* Align with the left edge of the screen */
+    right: 0; /* Stretch to fill the width of the viewport */
+        border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow */
+    background-color: white;
+    padding: 10px;
+    margin: 0px;
+  } {% endcomment %}
+  {% comment %} //--------------------------------------------
+  //--------------------------------------------
+  //-------------------------------------------- {% endcomment %}
+
+
+
+
+      .middle-circle-wrapper-mock {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-content: center;
+        align-items: center;
+      }
+
+
+      .slider-outline {
+
+        background-image: url("{{ 'back.png' | asset_url }}");
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        justify-content: end;
+    }
+
+
+    .slider-outline-button-sec-mock {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-content: center;
+      align-items: center;
+      margin-bottom: 30px;
+      margin-top: 20px;
+
+
+  }
+
+
+     /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+      /* ---------------------------------------- SLIDER BUTTON */
+
+      .button-container {
+          position: absolute; /* Position the button container absolutely */
+          top: 90.7%; /* Adjust top position */
+          left: 50%; /* Adjust left position */
+          transform: translate(-50%, -50%); /* Center the button container */
+          z-index: 1; /* Ensure the button is on top */
+        }
+
+        .btnn {
+            background-color: rgb(61, 35, 93);
+            width: 205px;
+            height: 69px;
+            border-radius: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            letter-spacing: 2px;
+            border: 1.5px solid rgb(192, 190, 195);
+            {% comment %} border-top: 0.5px solid rgba(255, 255, 255, 0.35);
+            border-left: 0.5px solid rgba(255, 255, 255, 0.35); {% endcomment %}
+            padding-left: 44px;
+            transition: 0.5s;
+            cursor: pointer;
+            position: relative;
+            font-weight: 300;
+            font-size: 15px;
+            letter-spacing:0cap;
+        }
+        .btnn:hover {
+          padding-left: 0px;
+          padding-right: 44px;
+          color: rgb(44, 51, 51);
+        }
+
+        .bally {
+            position: absolute;
+            width: 60px;
+            border: 1.5px solid white;
+            left: 3px;
+            height: 60px;
+            background-image: url("{{ 'slide.png' | asset_url }}");
+            background-size: cover;
+            background-position: center;
+            background-color: rgb(9, 9, 9);
+            border-radius: 50%;
+            transition: 0.01s ease;
+        }
+</style>
+
+{% schema %}
+{
+  "name": "mockup",
+  "blocks": [
+    {
+      "name": "Hero",
+      "type": "links",
+      "settings": []
+    }
+  ],
+  "settings": [
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#F4F4F4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "mockup"
+    }
+  ]
+}
+{% endschema %}
